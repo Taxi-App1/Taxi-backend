@@ -1,12 +1,18 @@
 import connectDB from "./db/Config.js";
-import  express  from "express";
+import express  from "express";
 import dotenv from "dotenv"
+import morgan from "morgan";
+import cors from "cors"
+
 connectDB()
 dotenv.config()
 const port = process.env.PORT || 6000
 const app = express()
 
-
+app.use(express.json());
+app.use(express.urlencoded({extended : true}))
+app.use(morgan("tiny"));
+app.use(cors());
 
 // testing server
 app.get("/",(req ,res)=>{
@@ -15,5 +21,5 @@ app.get("/",(req ,res)=>{
 
 })
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`App listening on port ${port}`)
   })

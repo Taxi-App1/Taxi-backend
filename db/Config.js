@@ -11,7 +11,6 @@ try {
         dbName: process.env.DB_NAME
     })
     console.log(`Connected to: ${conn.connection.host}`);
-    console.log(`App lisent on PORT ${process.env.PORT}`)
 } catch (error) {
     console.log(`Error: ${error.message}`)
     process.exit();
