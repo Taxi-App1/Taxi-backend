@@ -26,7 +26,28 @@ function uploadImage(req, res, next) {
     });
 }
 
+function uploadImageAndPicId(req, res, next) {
+    // Use upload.fields to handle multiple file fields
+    upload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "picture_id", maxCount: 1 },
+    ])(req, res, (err) => {
+        if (err) {
+            return next(err);
+        }
 
-const image = { uploadImage };
+        // Check if "image" and "picture_id" files were uploaded
+        if (!req.files || !req.files["image"] || !req.files["picture_id"]) {
+            console.log("One or both files not provided. Skipping upload.");
+            return next();
+        }
+
+        req.body.image = req.files["image"][0].path;
+        req.body.picture_id = req.files["picture_id"][0].path;
+        next();
+    });
+}
+
+const image = { uploadImage, uploadImageAndPicId };
 
 export default image;

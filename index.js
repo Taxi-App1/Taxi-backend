@@ -5,6 +5,8 @@ import morgan from "morgan";
 import cors from "cors";
 import adminRoute from "./Routes/adminRoute.js";
 import userRoute from "./Routes/userRoute.js"
+import driverRoute from "./Routes/driverRoute.js"
+import orderRoute from "./Routes/orderRoute.js"
 
 connectDB()
 dotenv.config()
@@ -24,6 +26,8 @@ app.get("/",(req ,res)=>{
 })
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);
+app.use("/driver", driverRoute);
+app.use("/order", orderRoute);
 app.use("*", (req, res) => {
     res.status(404).send({ message: "404 Not Found" });
   });
