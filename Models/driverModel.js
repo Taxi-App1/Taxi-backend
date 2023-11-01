@@ -1,10 +1,9 @@
 import { Schema, model } from "mongoose";
-const userSchema = new Schema(
+const driverSchema = new Schema(
     {
         first_name: {
             type: String,
             require: true,
-
         },
         last_name: {
             type: String,
@@ -14,6 +13,27 @@ const userSchema = new Schema(
             type: Number,
             require: true,
             unique: true,
+        },
+        car_type: {
+            type: String,
+            require: true,
+        },
+        car_color: {
+            type: String,
+            require: true,
+        },
+        picture_id: {
+            type: String,
+            require: true,
+        },
+        isAccess: {
+            type: Boolean,
+        },
+        expire_date: {
+            type: Date,
+        },
+        isAvailble: {
+            type: Boolean,
         },
         email: {
             type: String,
@@ -37,7 +57,7 @@ const userSchema = new Schema(
             require: true,
         },
     },
-    { collection: "User", timestamps: true }
+    { collection: "Driver", timestamps: true }
 );
-const User = model("User", userSchema);
-export default User;
+const Driver = model("Driver", driverSchema);
+export default Driver;
