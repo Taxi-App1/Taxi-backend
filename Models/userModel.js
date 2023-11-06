@@ -4,14 +4,14 @@ const userSchema = new Schema(
         first_name: {
             type: String,
             require: true,
-
+        
         },
         last_name: {
             type: String,
             require: true,
         },
         phone_number: {
-            type: Number,
+            type: String,
             require: true,
             unique: true,
         },
@@ -36,6 +36,10 @@ const userSchema = new Schema(
             type: String,
             require: true,
         },
+        role:{
+            type:String,
+            default:"User"
+        }
     },
     { collection: "User", timestamps: true }
 );

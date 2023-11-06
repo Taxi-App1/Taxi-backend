@@ -79,9 +79,9 @@ class Controller {
     }
 
     async login(req, res) {
-        const { email, password } = req.body;
+        const { phone_number, password } = req.body;
         try {
-            const findUser = await User.findOne({ email: email });
+            const findUser = await User.findOne({ phone_number: phone_number });
             if (!findUser) {
                 res.status(400).json({
                     message: "Login not successful",
@@ -90,7 +90,7 @@ class Controller {
             }else{
                 const isPasswordValid =  bcrypt.compare(password, findUser.password);
                 if (!isPasswordValid) {
-                    return res.status(400).send("email or password invalide !!");
+                    return res.status(400).json({message :"phone or password invalide !!"});
                 }
                 const token = jwt.sign({ userId: findUser._id }, process.env.JWT_KEY, {
                     expiresIn: "4d",

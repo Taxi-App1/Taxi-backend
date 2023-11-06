@@ -56,6 +56,10 @@ const driverSchema = new Schema(
             type: String,
             require: true,
         },
+        role:{
+            type:String,
+            default:"Driver"
+        }
     },
     { collection: "Driver", timestamps: true }
 );
