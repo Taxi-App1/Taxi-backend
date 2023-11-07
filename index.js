@@ -21,7 +21,7 @@ connectDB();
 dotenv.config();
 const port = process.env.PORT || 6000;
 const app = express();
-
+app.use('/uploads', express.static('uploads'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
