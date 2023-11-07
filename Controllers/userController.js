@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 class Controller {
     async register(req, res) {
         const data = req.body;
-        const userExist = await User.find({phone_number:data.phone_number})
+        const userExist = await User.findOne({phone_number:data.phone_number})
         if(userExist){
             return res.status(400).json({message: "This Phone Number Already Use"})
         }else{
