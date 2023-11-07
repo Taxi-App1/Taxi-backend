@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(
     cors({
-        origin: "http://localhost:3000", // Replace with your React app's URL
+        origin: "*", // Replace with your React app's URL
     })
 );
 app.use(express.static("appsetting.html"));
@@ -57,7 +57,7 @@ const expressServer = app.listen(port, () => {
 const io = new Server(expressServer, {
     transports: ["websocket", "polling"],
     cors: {
-      origin: "http://localhost:3000"
+      origin: "*"
     }
 });
 
@@ -67,4 +67,7 @@ io.on("connection", (socket) => {
     socket.on("chat message", (msg) => {
         io.emit("chat message", msg);
     });
+    socket.on('message', (data) => {
+        console.log(`New message from ${socket.id}: ${data}`);
+    })
 });
