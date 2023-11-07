@@ -5,6 +5,10 @@ import jwt from "jsonwebtoken";
 class Controller {
     async register(req, res) {
         const data = req.body;
+        const userExist = await User.find({phone_number:data.phone_number})
+        if(userExist){
+            return res.status(400).json({message: "This Phone Number Already Use"})
+        }else{
         try {
             const saltRounds = 10;
             const hashedPassword = await bcrypt.hash(data.password, saltRounds);
@@ -16,6 +20,7 @@ class Controller {
             console.log(error);
             res.status(500).json({ error });
         }
+    }
     }
 
     async getUser(req, res) {
