@@ -5,22 +5,29 @@ import jwt from "jsonwebtoken";
 class Controller {
     async register(req, res) {
         const data = req.body;
-        const userExist = await User.findOne({phone_number:data.phone_number})
-        if(userExist){
-            return res.status(400).json({message: "This Phone Number Already Use"})
-        }else{
-        try {
-            const saltRounds = 10;
-            const hashedPassword = await bcrypt.hash(data.password, saltRounds);
-            const newUser = { ...data, password: hashedPassword };
-            const createdUser = await User.create(newUser);
+        const userExist = await User.findOne({
+            phone_number: data.phone_number,
+        });
+        if (userExist) {
+            return res
+                .status(400)
+                .json({ message: "This Phone Number Already Use" });
+        } else {
+            try {
+                const saltRounds = 10;
+                const hashedPassword = await bcrypt.hash(
+                    data.password,
+                    saltRounds
+                );
+                const newUser = { ...data, password: hashedPassword };
+                const createdUser = await User.create(newUser);
 
-            res.status(200).json(createdUser);
-        } catch (error) {
-            console.log(error);
-            res.status(500).json({ error });
+                res.status(200).json(createdUser);
+            } catch (error) {
+                console.log(error);
+                res.status(500).json({ error });
+            }
         }
-    }
     }
 
     async getUser(req, res) {
@@ -54,14 +61,56 @@ class Controller {
 
     async updateUser(req, res) {
         const { id } = req.params;
+        const data = req.body;
         try {
-            const saltRounds = 10;
-            const data = req.body;
-            const hashedPassword = await bcrypt.hash(data.password, saltRounds);
-            const updateUser = { ...data, password: hashedPassword };
+            const user = await User.findOne({ _id: id });
+            if (!user)
+                return res
+                    .status(400)
+                    .json({ status: 404, message: "Driver not found" });
+            const updatedFields = {};
+            if (data.first_name) updatedFields.first_name = data.first_name;
+            if (data.last_name) updatedFields.last_name = data.last_name;
+
+            if (data.phone_number && data.phone_number !== user.phone_number) {
+                const userHasPhone = await User.findOne({
+                    phone_number: data.phone_number,
+                    _id: { $ne: user._id }, // Exclude the current player from the check
+                });
+                if (userHasPhone)
+                    return res.status(400).json({
+                        status: 408,
+                        message: "Phone has already been used",
+                    });
+                updatedFields.phone_number = data.phone_number;
+            }
+            if (data.email && data.email !== user.email) {
+                const UserHasEmail = await User.findOne({
+                    email: data.email,
+                    _id: { $ne: user._id }, // Exclude the current player from the check
+                });
+                if (UserHasEmail)
+                    return res.status(400).json({
+                        status: 402,
+                        message: "Email has already been used",
+                    });
+
+                updatedFields.email = data.email;
+            }
+            if (data.password) {
+                const salt = bcrypt.genSaltSync(10);
+                updatedFields.password = bcrypt.hashSync(data.password, salt);
+            }
+            if (data.image) {
+                updatedFields.image = data.image;
+            }
+
+            // merge the updated fields with the existing editUser object
+            const editUser = { ...data, ...updatedFields };
+
             const update = await User.findOneAndUpdate(
                 { _id: id },
-                { $set: updateUser },
+                { $set: editUser },
                 { new: true }
             );
 
@@ -92,21 +141,30 @@ class Controller {
                     message: "Login not successful",
                     error: "User not found",
                 });
-            }else{
-                const isPasswordValid =  bcrypt.compare(password, findUser.password);
+            } else {
+                const isPasswordValid = bcrypt.compare(
+                    password,
+                    findUser.password
+                );
                 if (!isPasswordValid) {
-                    return res.status(400).json({message :"phone or password invalide !!"});
+                    return res
+                        .status(400)
+                        .json({ message: "phone or password invalide !!" });
                 }
-                const token = jwt.sign({ userId: findUser._id }, process.env.JWT_KEY, {
-                    expiresIn: "4d",
-                });
+                const token = jwt.sign(
+                    { userId: findUser._id },
+                    process.env.JWT_KEY,
+                    {
+                        expiresIn: "4d",
+                    }
+                );
                 res.status(200).json({
                     findUser,
                     token,
                     message: `Welcome ${findUser.first_name}`,
                 });
             }
-        }  catch (erorr) {
+        } catch (erorr) {
             console.log(erorr);
             res.status(500).json({ erorr });
         }
