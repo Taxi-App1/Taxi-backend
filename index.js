@@ -11,6 +11,7 @@ import userRoute from "./Routes/userRoute.js";
 import driverRoute from "./Routes/driverRoute.js";
 import orderRoute from "./Routes/orderRoute.js";
 import chatRouter from "./Routes/messagesRoute.js";
+import roomRouter from "./Routes/roomRoute.js"
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 
@@ -21,13 +22,13 @@ connectDB();
 dotenv.config();
 const port = process.env.PORT || 6000;
 const app = express();
-app.use('/uploads', express.static('uploads'));
+app.use("/uploads", express.static("uploads"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan("tiny"));
 app.use(
     cors({
-        origin: "*", // Replace with your React app's URL
+        origin: "http://localhost:3000", // Replace with your React app's URL
     })
 );
 app.use(express.static("appsetting.html"));
@@ -43,6 +44,7 @@ app.use("/user", userRoute);
 app.use("/driver", driverRoute);
 app.use("/order", orderRoute);
 app.use("/chat", chatRouter);
+app.use("/room", roomRouter);
 
 // app.use("*", (req, res) => {
 //     res.status(404).send({ message: "404 Not Found" });
@@ -57,17 +59,22 @@ const expressServer = app.listen(port, () => {
 const io = new Server(expressServer, {
     transports: ["websocket", "polling"],
     cors: {
-      origin: "*"
-    }
+        origin: "http://localhost:3000",
+    },
 });
 
 io.on("connection", (socket) => {
-    console.log("a user connected");
-
-    socket.on("chat message", (msg) => {
-        io.emit("chat message", msg);
-    });
-    socket.on('message', (data) => {
-        console.log(`New message from ${socket.id}: ${data}`);
+    console.log(`User ${socket.id} connect to server`)
+    socket.on("join_room",(data)=>{
+      console.log( `${socket.id} join room ${data}`)
+      socket.join(data)
     })
+    socket.on("send_message" , (data)=>{
+        socket.to(data.room).emit("receive_message", data)
+        console.log(data)
+    } )
+    socket.on("disconnect",()=>{
+        console.log("user disconnect", socket.id)
+    })
+
 });
