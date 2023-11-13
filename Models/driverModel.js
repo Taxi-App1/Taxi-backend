@@ -17,6 +17,7 @@ const driverSchema = new Schema(
         car_type: {
             type: String,
             require: true,
+            enum: ["x Bus", "2x Bus" , "3x Bus" ,"Bicycle" ,"Car" , "Motorcycle" ],
         },
         car_color: {
             type: String,
@@ -37,7 +38,6 @@ const driverSchema = new Schema(
         },
         email: {
             type: String,
-            require: true,
             unique: true,
             trim: true,
             lowercase: true,
