@@ -33,9 +33,6 @@ const driverSchema = new Schema(
         expire_date: {
             type: Date,
         },
-        isAvailble: {
-            type: Boolean,
-        },
         email: {
             type: String,
             unique: true,
