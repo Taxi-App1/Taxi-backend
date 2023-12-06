@@ -47,6 +47,21 @@ class Controller {
         }
     }
 
+    async getDriverByTypeCar(req, res) {
+        const { typeCar } = req.params;
+        try {
+            const driverByCarType = await Driver.find({ car_type: typeCar });
+            if (!driverByCarType) {
+                res.send("driver not found");
+            } else {
+                res.status(200).json(driverByCarType);
+            }
+        } catch (erorr) {
+            console.log(erorr);
+            res.status(500).json({ erorr });
+        }
+    }
+
     async updateDriver(req, res) {
         const { id } = req.params;
         const data = req.body;
