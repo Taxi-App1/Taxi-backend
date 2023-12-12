@@ -3,29 +3,29 @@ const driverSchema = new Schema(
     {
         first_name: {
             type: String,
-            require: true,
+            required: true,
         },
         last_name: {
             type: String,
-            require: true,
+            required: true,
         },
         phone_number: {
             type: String,
-            require: true,
+            required: true,
             unique: true,
         },
         car_type: {
             type: String,
-            require: true,
+            required: true,
             enum: ["x Bus", "2x Bus" , "3x Bus" ,"Bicycle" ,"Car" , "Motorcycle" ],
         },
         car_color: {
             type: String,
-            require: true,
+            required: true,
         },
         picture_id: {
             type: String,
-            require: true,
+            required: true,
         },
         isAccess: {
             type: Boolean,
@@ -33,25 +33,25 @@ const driverSchema = new Schema(
         expire_date: {
             type: Date,
         },
-        email: {
-            type: String,
-            unique: true,
-            trim: true,
-            lowercase: true,
-            match: [
-                /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-                "Please fill a valid email address",
-            ],
-        },
+        // email: {
+        //     type: String,
+        //     unique: true,
+        //     trim: true,
+        //     lowercase: true,
+        //     match: [
+        //         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+        //         "Please fill a valid email address",
+        //     ],
+        // },
         password: {
             type: String,
-            require: true,
+            required: true,
             trim: true,
             lowercase: true,
         },
         image: {
             type: String,
-            require: true,
+            required: true,
         },
         role:{
             type:String,

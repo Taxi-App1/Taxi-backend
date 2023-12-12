@@ -14,11 +14,8 @@ import chatRouter from "./Routes/messagesRoute.js";
 import roomRouter from "./Routes/roomRoute.js"
 import userInfoRouter from "./Routes/userInfoRoute.js"
 import LocationAndAvailbDriverRoute from "./Routes/LocationAndAvailbDriverRoute.js"
-import { fileURLToPath } from "url";
-import { dirname } from "path";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+
 
 connectDB();
 dotenv.config();
@@ -33,12 +30,11 @@ app.use(
         origin: "*", // Replace with your React app's URL
     })
 );
-app.use(express.static("appsetting.html"));
+
 
 // testing server
 app.get("/", (req, res) => {
-    const filePath = path.join(__dirname, "appsetting.html");
-    res.sendFile(filePath);
+    return res.send("hello world")
 });
 
 app.use("/admin", adminRoute);
@@ -75,10 +71,14 @@ io.on("connection", (socket) => {
     })
     socket.on("send_message" , (data)=>{
         socket.to(data.room).emit("receive_message", data)
-        console.log(data)
+        console.log(data.content)
     } )
     socket.on("disconnect",()=>{
         console.log("user disconnect", socket.id)
     })
+    socket.on("typing", (data) => {
+        // Emit show-typing event to all sockets in the room except the current socket
+        socket.to(data.room).emit("show-typing", data.name);
+    });
 
 });
