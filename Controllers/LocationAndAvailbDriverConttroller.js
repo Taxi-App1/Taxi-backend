@@ -16,10 +16,7 @@ class controller {
         try {
             const getLocationDriver = await Location.findOne({
                 driver_id: driverId,
-            }).populate({
-                path: "driver_id",
-                select: "car_type",
-            });;
+            }).populate("driver_id");
             return res.status(200).json(getLocationDriver);
         } catch (erorr) {
             console.log(erorr);
