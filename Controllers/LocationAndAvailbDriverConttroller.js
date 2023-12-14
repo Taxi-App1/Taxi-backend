@@ -33,8 +33,9 @@ class controller {
             const driverIds = drivers.map(driver => driver._id);
     
             const locationDrivers = await Location.find({
-                driver_id:{$in : driverIds},
-            }).populate("driver_id")
+                driver_id: { $in: driverIds },
+                isAvailble: true,
+            }).populate("driver_id");
         
             return res.status(200).json(locationDrivers);
         } catch (error) {

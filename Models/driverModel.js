@@ -17,7 +17,7 @@ const driverSchema = new Schema(
         car_type: {
             type: String,
             required: true,
-            enum: ["x Bus", "2x Bus" , "3x Bus" ,"Bicycle" ,"Car" , "Motorcycle" ],
+            enum: ["Bus", "2x Bus" , "3x Bus" ,"Bicycle" ,"Car" , "Motorcycle" ],
         },
         car_color: {
             type: String,
@@ -29,20 +29,11 @@ const driverSchema = new Schema(
         },
         isAccess: {
             type: Boolean,
+            default:false
         },
         expire_date: {
             type: Date,
         },
-        // email: {
-        //     type: String,
-        //     unique: true,
-        //     trim: true,
-        //     lowercase: true,
-        //     match: [
-        //         /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        //         "Please fill a valid email address",
-        //     ],
-        // },
         password: {
             type: String,
             required: true,

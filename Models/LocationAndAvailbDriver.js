@@ -9,6 +9,7 @@ const locationAndAvailabSchema = new Schema(
         },
         isAvailble: {
             type: Boolean,
+            default:false
         },
         driver_id:{
             type:Schema.Types.ObjectId,
