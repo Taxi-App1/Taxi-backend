@@ -1,5 +1,5 @@
 import Location from "../Models/LocationAndAvailbDriver.js";
-
+import Driver from "../Models/driverModel.js"
 class controller {
     async addLocation(req, res) {
         const data = req.body;
@@ -13,6 +13,7 @@ class controller {
     }
     async getLocationForDriver(req, res) {
         const { driverId } = req.params;
+        console.log(driverId)
         try {
             const getLocationDriver = await Location.findOne({
                 driver_id: driverId,
@@ -23,6 +24,25 @@ class controller {
             res.send(erorr);
         }
     }
+
+    async getLocationForDriverByTypeCar(req, res) {
+        const { typeCar } = req.params;
+    
+        try {    
+            const drivers = await Driver.find({ car_type: typeCar });    
+            const driverIds = drivers.map(driver => driver._id);
+    
+            const locationDrivers = await Location.find({
+                driver_id:{$in : driverIds},
+            }).populate("driver_id")
+        
+            return res.status(200).json(locationDrivers);
+        } catch (error) {
+            console.error(error);
+            res.status(500).json({ error: "Internal Server Error" });
+        }
+    }
+    
     
     async updateLocationForDriver(req, res) {
         const { driverId } = req.params;
