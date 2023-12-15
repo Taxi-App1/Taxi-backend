@@ -8,7 +8,7 @@ router.post("/registerDriver" ,image.uploadImageAndPicId,controller.register)
 router.get("/getDriver" ,controller.getDriver)
 router.get("/getDriver/:id" ,controller.getDriverById)
 router.get("/getDriverByTypeCar/:typeCar" ,controller.getDriverByTypeCar)
-router.put("/updateDriver/:id" ,image.uploadImageAndPicId,controller.updateDriver)
+router.post("/updateDriver/:id" ,image.uploadImageAndPicId,controller.updateDriver)
 router.delete("/deleteDriver/:id" ,controller.deleteDriver)
 router.post("/login" , controller.login)
 

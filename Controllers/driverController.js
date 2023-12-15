@@ -83,17 +83,6 @@ class Controller {
                     );
                 updatedFields.phone_number = data.phone_number;
             }
-            if (data.email && data.email !== user.email) {
-                const DrivreHasEmail = await Driver.findOne({
-                    email: data.email,
-                    _id: { $ne: driver._id }, // Exclude the current player from the check
-                });
-                if (DrivreHasEmail)
-                    return res.status(400).json(
-                        {status :402, message :"Email has already been used"}
-                    );
-                updatedFields.email = data.email;
-            }
             if (data.car_type) {
                 updatedFields.car_type = data.car_type;
             }
@@ -102,9 +91,6 @@ class Controller {
             }
             if (data.isAccess) {
                 updatedFields.isAccess = data.isAccess;
-            }
-            if (data.isAvailble) {
-                updatedFields.isAvailble = data.isAvailble;
             }
             if (data.password) {
                 const salt = bcrypt.genSaltSync(10);

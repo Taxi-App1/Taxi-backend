@@ -35,15 +35,15 @@ function uploadImageAndPicId(req, res, next) {
         if (err) {
             return next(err);
         }
-
-        // Check if "image" and "picture_id" files were uploaded
-        if (!req.files || !req.files["image"] || !req.files["picture_id"]) {
-            console.log("One or both files not provided. Skipping upload.");
-            return next();
+        // Check if "image" file was uploaded
+        if (req.files && req.files["image"]) {
+            req.body.image = req.files["image"][0].path;
         }
 
-        req.body.image = req.files["image"][0].path;
-        req.body.picture_id = req.files["picture_id"][0].path;
+        // Check if "picture_id" file was uploaded
+        if (req.files && req.files["picture_id"]) {
+            req.body.picture_id = req.files["picture_id"][0].path;
+        }
         next();
     });
 }
