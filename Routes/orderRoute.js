@@ -6,6 +6,7 @@ const router = express()
 router.post("/addOrder" ,controller.addOrder)
 router.get("/getOrder" ,controller.getOrders)
 router.get("/getOrder/:id" ,controller.getOrdersById)
+router.get("/getOrderByDriverId/:driverId" ,controller.getOrdersByDriverId)
 router.put("/updateOrder/:id" ,controller.updateOrder)
 router.delete("/deleteOrder/:id" ,controller.deleteOrder)
 
