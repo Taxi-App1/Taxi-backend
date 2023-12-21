@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+
 const orderSchema = new Schema(
     {
         user_id: {
@@ -7,7 +8,6 @@ const orderSchema = new Schema(
             required: true,
         },
         driver_id: {
-            type: String,
             type: Schema.Types.ObjectId,
             ref: "Driver",
             required: true,
@@ -16,22 +16,42 @@ const orderSchema = new Schema(
             type: String,
             required: true,
         },
-
         to: {
             type: String,
             required: true,
         },
+        fromCoordinates: {
+            long: {
+                type: Number,
+                required: true,
+            },
+            lat: {
+                type: Number,
+                required: true,
+            },
+        },
+        toCoordinates: {
+            long: {
+                type: Number,
+                required: true,
+            },
+            lat: {
+                type: Number,
+                required: true,
+            },
+        },
         typeOfOrder: {
             type: String,
-            require: true,
+            required: true,
             enum: ["x Bus", "2x Bus", "3x Bus", "Bicycle", "Car", "Motorcycle"],
         },
         total: {
             type: Number,
             default: 0,
         },
-        status :{
-            type:Boolean,
+        status: {
+            type: Boolean,
+            default: false,
         },
         rate: {
             type: Number,
@@ -40,5 +60,6 @@ const orderSchema = new Schema(
     },
     { collection: "Order", timestamps: true }
 );
+
 const Order = model("Order", orderSchema);
 export default Order;
