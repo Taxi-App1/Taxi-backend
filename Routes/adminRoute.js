@@ -7,6 +7,7 @@ router.post("/login",controller.login)
 router.put("/upgrade/:id",controller.upgradeRole)
 router.delete("/delete/:id",controller.deleteAdmin)
 router.get("/",controller.getallAdmin)
+router.get("/getAdmin/:id",controller.getAdminById)
 router.post("/update/:id",controller.updateAdmin)
 router.post("/logout",controller.logout)
 export default router;

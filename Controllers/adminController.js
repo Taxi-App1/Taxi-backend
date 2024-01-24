@@ -132,7 +132,20 @@ class Controller {
             });
         }
     }
-
+    async getAdminById(req, res) {
+        const { id } = req.params;
+        try {
+            const user = await Admin.findOne({ _id: id });
+            if (!user) {
+                res.send("user not found");
+            } else {
+                res.status(200).json(user);
+            }
+        } catch (erorr) {
+            console.log(erorr);
+            res.status(500).json({ erorr });
+        }
+    }
     async updateAdmin(req, res, next) {
         const { username, password, full_name, email } = req.body;
         const { id } = req.params;
