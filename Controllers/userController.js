@@ -137,36 +137,42 @@ class Controller {
         try {
             const findUser = await User.findOne({ phone_number: phone_number });
             if (!findUser) {
-                res.status(400).json({
+                return res.status(400).json({
                     message: "Login not successful",
                     error: "User not found",
                 });
-            } else {
-                const isPasswordValid = bcrypt.compare(
-                    password,
-                    findUser.password
-                );
-                if (!isPasswordValid) {
-                    return res
-                        .status(400)
-                        .json({ message: "phone or password invalide !!" });
-                }
-                const token = jwt.sign(
-                    { userId: findUser._id },
-                    process.env.JWT_KEY,
-                    {
-                        expiresIn: "4d",
-                    }
-                );
-                res.status(200).json({
-                    findUser,
-                    token,
-                    message: `Welcome ${findUser.first_name}`,
-                });
             }
-        } catch (erorr) {
-            console.log(erorr);
-            res.status(500).json({ erorr });
+            if (!password) {
+                return res
+                    .status(400)
+                    .json({ message: "Please enter your password!" });
+            }
+            const isPasswordValid = bcrypt.compare(
+                password,
+                findUser.password
+            );
+            if (!isPasswordValid) {
+                return res
+                    .status(400)
+                    .json({ message: "Phone or password invalid!" });
+            }
+            const token = jwt.sign(
+                { userId: findUser._id },
+                process.env.JWT_KEY,
+                {
+                    expiresIn: "4d",
+                }
+            );
+            res.status(200).json({
+                findUser,
+                token,
+                message: `Welcome ${findUser.first_name}`,
+            });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({
+                error: error.message || "Internal Server Error",
+            });
         }
     }
 }

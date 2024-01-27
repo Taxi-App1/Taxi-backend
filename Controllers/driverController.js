@@ -67,20 +67,27 @@ class Controller {
         const data = req.body;
         try {
             const driver = await Driver.findOne({ _id: id });
-            if (!driver) return res.status(400).json({status:404, message:"Driver not found"});
+            if (!driver)
+                return res
+                    .status(400)
+                    .json({ status: 404, message: "Driver not found" });
             const updatedFields = {};
             if (data.first_name) updatedFields.first_name = data.first_name;
             if (data.last_name) updatedFields.last_name = data.last_name;
 
-            if (data.phone_number && data.phone_number !== driver.phone_number) {
+            if (
+                data.phone_number &&
+                data.phone_number !== driver.phone_number
+            ) {
                 const driverHasPhone = await Driver.findOne({
                     phone_number: data.phone_number,
                     _id: { $ne: driver._id }, // Exclude the current player from the check
                 });
                 if (driverHasPhone)
-                    return res.status(400).json(
-                        {status :408, message :"Phone has already been used"}
-                    );
+                    return res.status(400).json({
+                        status: 408,
+                        message: "Phone has already been used",
+                    });
                 updatedFields.phone_number = data.phone_number;
             }
             if (data.car_type) {
@@ -133,35 +140,39 @@ class Controller {
     async login(req, res) {
         const { phone_number, password } = req.body;
         try {
-            const findDriver = await Driver.findOne({ phone_number:phone_number });
+            const findDriver = await Driver.findOne({
+                phone_number: phone_number,
+            });
             if (!findDriver) {
-                res.status(400).json({
+                return res.status(400).json({
                     message: "Login not successful",
                     error: "Driver not found",
                 });
-            } else {
-                const isPasswordValid = bcrypt.compare(
-                    password,
-                    findDriver.password
-                );
-                if (!isPasswordValid) {
-                    return res
-                        .status(400)
-                        .send("Phone or password invalide !!");
-                }
-                const token = jwt.sign(
-                    { driverId: findDriver._id },
-                    process.env.JWT_KEY,
-                    {
-                        expiresIn: "4d",
-                    }
-                );
-                res.status(200).json({
-                    findDriver,
-                    token,
-                    message: `Welcome ${findDriver.first_name}`,
-                });
             }
+            if (!password) {
+                return res
+                    .status(400)
+                    .json({ message: "Please enter your password!" });
+            }
+            const isPasswordValid = bcrypt.compare(
+                password,
+                findDriver.password
+            );
+            if (!isPasswordValid) {
+                return res.status(400).send("Phone or password invalide !!");
+            }
+            const token = jwt.sign(
+                { driverId: findDriver._id },
+                process.env.JWT_KEY,
+                {
+                    expiresIn: "4d",
+                }
+            );
+            res.status(200).json({
+                findDriver,
+                token,
+                message: `Welcome ${findDriver.first_name}`,
+            });
         } catch (erorr) {
             console.log(erorr);
             res.status(500).json({ erorr });
