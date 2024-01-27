@@ -133,6 +133,7 @@ class Controller {
         }
     }
 
+    
     async updateAdmin(req, res, next) {
         const { username, password, full_name, email } = req.body;
         const { id } = req.params;
