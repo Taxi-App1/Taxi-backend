@@ -9,7 +9,7 @@ router.get("/getUser" ,controller.getUser)
 router.get("/getUser/:id" ,controller.getUserById)
 router.post("/updateUser/:id" ,image.uploadImage,controller.updateUser)
 router.delete("/deleteUser/:id" ,controller.deleteUser)
-router.post("/login" , controller.login)
+router.post("/login"  ,controller.login )
 
 
 

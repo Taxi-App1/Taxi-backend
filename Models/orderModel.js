@@ -43,7 +43,7 @@ const orderSchema = new Schema(
         typeOfOrder: {
             type: String,
             required: true,
-            enum: ["x Bus", "2x Bus", "3x Bus", "Bicycle", "Car", "Motorcycle"],
+            enum: ["Car", "Comfort", " Van", "Bus", " Moto", " TukTuk"],
         },
         total: {
             type: Number,
