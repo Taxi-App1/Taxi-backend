@@ -43,7 +43,7 @@ class Controller {
         try {
             const getOrdersByDriverId = await Order.find({
                 driver_id: driverId,
-            });
+            }).populate("user_id");
             res.status(200).json(getOrdersByDriverId);
         } catch (error) {
             console.log(error);

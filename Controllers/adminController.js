@@ -132,6 +132,7 @@ class Controller {
             });
         }
     }
+  
     async getAdminById(req, res) {
         const { id } = req.params;
         try {
@@ -146,6 +147,7 @@ class Controller {
             res.status(500).json({ erorr });
         }
     }
+
     async updateAdmin(req, res, next) {
         const { username, password, full_name, email } = req.body;
         const { id } = req.params;
