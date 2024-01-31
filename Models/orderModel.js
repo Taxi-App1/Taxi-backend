@@ -50,8 +50,12 @@ const orderSchema = new Schema(
             default: 0,
         },
         status: {
-            type: Boolean,
-            default: false,
+            type: String,
+            enum: ["Pending", "Accepted", "Rejected"],
+            default: "Pending",
+        },
+        ride_status:{
+            type:Boolean
         },
         rate: {
             type: Number,
