@@ -10,7 +10,7 @@ const orderSchema = new Schema(
         driver_id: {
             type: Schema.Types.ObjectId,
             ref: "Driver",
-            required: true,
+            default: null,
         },
         from: {
             type: String,
@@ -43,7 +43,7 @@ const orderSchema = new Schema(
         typeOfOrder: {
             type: String,
             required: true,
-            enum: ["Car", "Comfort", " Van", "Bus", " Moto", " TukTuk"],
+            enum: ["Car", "Comfort", "Van", "Bus", "Moto", "TukTuk"],
         },
         total: {
             type: Number,
