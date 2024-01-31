@@ -55,7 +55,7 @@ const orderSchema = new Schema(
             default: "Pending",
         },
         ride_status:{
-            type:Boolean
+            enum: ["Completed", "Canceled"],
         },
         rate: {
             type: Number,
