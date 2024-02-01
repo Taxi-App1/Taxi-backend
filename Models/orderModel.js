@@ -54,7 +54,8 @@ const orderSchema = new Schema(
             enum: ["Pending", "Accepted", "Rejected"],
             default: "Pending",
         },
-        ride_status:{
+        ride_status: {
+            type: String,
             enum: ["Completed", "Canceled"],
         },
         rate: {
