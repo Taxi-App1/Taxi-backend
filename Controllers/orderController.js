@@ -32,7 +32,12 @@ class Controller {
             const getOrders = await Order.findById(id)
                 .populate("user_id")
                 .populate("driver_id");
-            res.status(200).json(getOrders);
+            if (!getOrders) {
+                return res
+                    .status(200)
+                    .json({ message: "There is no order yet !" });
+            }
+            return res.status(200).json(getOrders);
         } catch (error) {
             console.log(error);
             res.status(500).json({ error });
@@ -44,7 +49,12 @@ class Controller {
             const getOrdersByDriverId = await Order.find({
                 driver_id: driverId,
             }).populate("user_id");
-            res.status(200).json(getOrdersByDriverId);
+            if (!getOrdersByDriverId) {
+                return res
+                    .status(200)
+                    .json({ message: "There is no order yet !" });
+            }
+            return res.status(200).json(getOrdersByDriverId);
         } catch (error) {
             console.log(error);
             res.status(500).json({ error });
@@ -69,7 +79,12 @@ class Controller {
                 { $set: data },
                 { new: true }
             );
-            res.status(200).json(updateOrders);
+            if (!updateOrders) {
+                return res
+                    .status(200)
+                    .json({ message: "There is no order yet !" });
+            }
+            return res.status(200).json(updateOrders);
         } catch (error) {
             console.log(error);
             res.status(500).json({ error });
