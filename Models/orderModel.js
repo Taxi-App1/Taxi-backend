@@ -10,7 +10,6 @@ const orderSchema = new Schema(
         driver_id: {
             type: Schema.Types.ObjectId,
             ref: "Driver",
-            default: null,
         },
         from: {
             type: String,
