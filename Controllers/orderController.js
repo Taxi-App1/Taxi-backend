@@ -58,8 +58,10 @@ class Controller {
   }
 
   async getIsNotEndedOrder(req, res) {
+    const { userId } = req.params;
     try {
       const getIsNotEndedOrder = await Order.findOne({
+        user_id: userId,
         is_ended: false,
       })
         .populate("user_id")
