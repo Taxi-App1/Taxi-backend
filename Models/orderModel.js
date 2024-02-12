@@ -10,7 +10,6 @@ const orderSchema = new Schema(
         driver_id: {
             type: Schema.Types.ObjectId,
             ref: "Driver",
-            required: true,
         },
         from: {
             type: String,
@@ -43,20 +42,29 @@ const orderSchema = new Schema(
         typeOfOrder: {
             type: String,
             required: true,
-            enum: ["Car", "Comfort", " Van", "Bus", " Moto", " TukTuk"],
+            enum: ["Car", "Comfort", "Van", "Bus", "Moto", "TukTuk"],
         },
         total: {
             type: Number,
             default: 0,
         },
         status: {
-            type: Boolean,
-            default: false,
+            type: String,
+            enum: ["Pending", "Accepted", "Rejected"],
+            default: "Pending",
+        },
+        ride_status: {
+            type: String,
+            enum: ["Completed", "Canceled"],
         },
         rate: {
             type: Number,
             default: 0,
         },
+        is_ended:{
+            type: Boolean,
+            default: false,
+        }
     },
     { collection: "Order", timestamps: true }
 );

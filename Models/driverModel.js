@@ -17,7 +17,7 @@ const driverSchema = new Schema(
         car_type: {
             type: String,
             required: true,
-            enum: ["Car", "Comfort", " Van", "Bus", " Moto", " TukTuk"],
+            enum: ["Car", "Comfort", "Van", "Bus", "Moto", "TukTuk"],
         },
         car_color: {
             type: String,
