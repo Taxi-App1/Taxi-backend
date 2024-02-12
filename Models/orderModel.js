@@ -61,6 +61,10 @@ const orderSchema = new Schema(
             type: Number,
             default: 0,
         },
+        is_ended:{
+            type: Boolean,
+            default: false,
+        }
     },
     { collection: "Order", timestamps: true }
 );
