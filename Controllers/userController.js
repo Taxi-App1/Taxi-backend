@@ -142,20 +142,24 @@ class Controller {
                     error: "User not found",
                 });
             }
+
             if (!password) {
                 return res
                     .status(400)
                     .json({ message: "Please enter your password!" });
             }
-            const isPasswordValid = bcrypt.compare(
-                password,
-                findUser.password
-            );
+
+            const isPasswordValid = await bcrypt.compare(
+                password.trim(),
+                findUser.password.trim()
+            )
+
             if (!isPasswordValid) {
                 return res
                     .status(400)
                     .json({ message: "Phone or password invalid!" });
             }
+
             const token = jwt.sign(
                 { userId: findUser._id },
                 process.env.JWT_KEY,
@@ -163,13 +167,15 @@ class Controller {
                     expiresIn: "4d",
                 }
             );
-            res.status(200).json({
+
+            
+            return res.status(200).json({
                 findUser,
                 token,
                 message: `Welcome ${findUser.first_name}`,
             });
         } catch (error) {
-            console.log(error);
+            console.error("Login Error:", error);
             res.status(500).json({
                 error: error.message || "Internal Server Error",
             });
