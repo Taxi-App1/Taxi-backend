@@ -168,6 +168,7 @@ class Controller {
                 }
             );
 
+            
             return res.status(200).json({
                 findUser,
                 token,
