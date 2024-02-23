@@ -6,6 +6,7 @@ import cors from "cors";
 import { Server } from "socket.io";
 import path from "path";
 import { fileURLToPath } from "url";
+import bcrypt from "bcrypt";
 
 import adminRoute from "./Routes/adminRoute.js";
 import userRoute from "./Routes/userRoute.js";
@@ -16,6 +17,7 @@ import roomRouter from "./Routes/roomRoute.js";
 import userInfoRouter from "./Routes/userInfoRoute.js";
 import LocationAndAvailbDriverRoute from "./Routes/LocationAndAvailbDriverRoute.js";
 import User from "./Models/userModel.js";
+import Driver from "./Models/driverModel.js";
 
 connectDB();
 dotenv.config();
@@ -36,9 +38,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 app.use(express.static(path.join(__dirname, "public")));
 
 // testing server
-app.get("/", (req, res) => {
-    return res.send("hello world");
-});
+// app.get("/", (req, res) => {
+//     return res.send("hello world");
+// });
 
 app.use("/admin", adminRoute);
 app.use("/user", userRoute);
@@ -65,37 +67,56 @@ const io = new Server(expressServer, {
         origin: "*",
     },
 });
-
-import bcrypt from "bcrypt";
+// Function to capitalize the first letter of a string
+function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 app.delete("/deleteAccount", async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { password, phone_number } = req.body;
 
-        // Use async/await to wait for the findOne query to finish
-        const findUser = await User.findOne({ email });
+        // Find user by phone number
+        const findUser = await User.findOne({ phone_number });
+        // Find driver by phone number
+        const findDriver = await Driver.findOne({ phone_number });
 
-        if (!findUser) {
-            return res.status(404).json({ message: "User not found" });
+        if (findUser) {
+            // Use bcrypt.compareSync to compare the provided password with the hashed password in the database
+            const isPasswordValid = bcrypt.compare(
+                password,
+                findUser.password
+            );
+
+            if (!isPasswordValid) {
+                return res.status(401).json({ message: "Invalid password" });
+            }
+
+            // If the password is valid, proceed with deleting the user account
+            await User.deleteOne({ phone_number });
+
+            return res.json({ message: "User account deleted successfully" });
+        } else if (findDriver) {
+            // Use bcrypt.compareSync to compare the provided password with the hashed password in the database
+            const isPasswordValid = bcrypt.compare(
+                password,
+                findDriver.password
+            );
+
+            if (!isPasswordValid) {
+                return res.status(401).json({ message: "Invalid password" });
+            }
+
+            // If the password is valid, proceed with deleting the driver account
+            await Driver.deleteOne({ phone_number });
+
+            return res.json({ message: "Driver account deleted successfully" });
+        } else {
+            // If neither a user nor a driver is found with the provided phone number
+            return res
+                .status(404)
+                .json({ message: "User or driver not found" });
         }
-
-        // Use bcrypt.compare to compare the provided password with the hashed password in the database
-        const isPasswordValid = await bcrypt.compare(
-            password,
-            findUser.password
-        );
-
-        if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid password" });
-        }
-
-        // If the password is valid, proceed with deleting the account
-        // Perform account deletion logic here
-
-        // Example: Remove the user from the database
-        await User.deleteOne({ email });
-
-        res.json({ message: "Account deleted successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Internal server error" });
